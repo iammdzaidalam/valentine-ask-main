@@ -39,6 +39,16 @@ if(closeBtn) {
             
             yesScale = 1;
             yesBtn.style.transform = "scale(1)";
+            
+            if(miniEnvelope) {
+                miniEnvelope.style.display = "none";
+            }
+            
+            if(proposalContainer) {
+                proposalContainer.style.display = "none";
+                const pWindow = proposalContainer.querySelector(".pixel-window");
+                if(pWindow) pWindow.classList.remove("open");
+            }
         }, 600);
     });
 }
@@ -107,4 +117,107 @@ yesBtn.addEventListener("click", () => {
     buttons.style.display = "none";
 
     finalText.style.display = "block";
+    
+    if(miniEnvelope) {
+        miniEnvelope.style.display = "block";
+    }
 });
+
+const miniEnvelope = document.getElementById("mini-envelope");
+const proposalContainer = document.getElementById("proposal-container");
+const closeProposalBtn = document.querySelector(".close-proposal");
+const proposalSlide = document.getElementById("proposal-slide");
+
+const slides = ["cat_heart.gif", "cat_dance.gif"];
+let currentSlideIndex = 0;
+
+function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+    if(proposalSlide) {
+        proposalSlide.src = slides[currentSlideIndex];
+    }
+}
+
+let slideInterval = setInterval(nextSlide, 2500);
+
+if(proposalSlide) {
+    proposalSlide.parentElement.addEventListener("click", () => {
+        nextSlide();
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 2500);
+    });
+}
+
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener('dragstart', event => event.preventDefault());
+document.addEventListener('selectstart', event => {
+    if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+        event.preventDefault();
+    }
+});
+
+if(miniEnvelope) {
+    miniEnvelope.addEventListener("click", (e) => {
+        e.stopPropagation();
+        letter.style.display = "none";
+        if(proposalContainer) {
+            proposalContainer.style.display = "flex";
+            
+            const proposalWindow = proposalContainer.querySelector(".pixel-window");
+            if(proposalWindow) {
+                setTimeout(() => {
+                    proposalWindow.classList.add("open");
+                }, 10);
+            }
+        }
+    });
+}
+
+if(closeProposalBtn) {
+    closeProposalBtn.addEventListener("click", () => {
+        if(proposalContainer) {
+            const proposalWindow = proposalContainer.querySelector(".pixel-window");
+            if(proposalWindow) {
+                proposalWindow.classList.remove("open");
+                
+                setTimeout(() => {
+                    proposalContainer.style.display = "none";
+                    
+                    letter.style.display = "none";
+                    envelope.style.display = "block";
+
+                    pixelWindow.classList.remove("open");
+                    title.textContent = "Will you be my Valentine?";
+                    catImg.src = "cat_heart.gif";
+                    pixelWindow.classList.remove("final");
+                    buttons.style.display = "flex";
+                    finalText.style.display = "none";
+                    
+                    noBtn.style.transform = "translate(0, 0)";
+                    
+                    yesScale = 1;
+                    yesBtn.style.transform = "scale(1)";
+                    
+                    if(miniEnvelope) {
+                        miniEnvelope.style.display = "none";
+                    }
+                }, 600);
+            } else {
+                proposalContainer.style.display = "none";
+                
+                letter.style.display = "none";
+                envelope.style.display = "block";
+                
+                pixelWindow.classList.remove("open");
+                title.textContent = "Will you be my Valentine?";
+                catImg.src = "cat_heart.gif";
+                pixelWindow.classList.remove("final");
+                buttons.style.display = "flex";
+                finalText.style.display = "none";
+                noBtn.style.transform = "translate(0, 0)";
+                
+                if(miniEnvelope) miniEnvelope.style.display = "none";
+            }
+        }
+    });
+}
